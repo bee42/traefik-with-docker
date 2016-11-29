@@ -8,9 +8,9 @@
 
 ---
 ## The crew bee42 invite you
-## rethink IT with POTt
+## rethink IT with POTts
 
-The Purpose, Organisation, Technology transition concept
+The Purpose, Organisation, Technology transition service
 
 ![](images/bee42-TOP2POTt.png)
 
