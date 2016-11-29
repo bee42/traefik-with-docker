@@ -1,5 +1,5 @@
 # bee42 docker meetup talk
-## Traefik with Docker
+## Træfɪk with Docker
 
 ![](images/traefik-logo.png)
 
@@ -20,7 +20,7 @@ The Purpose, Organisation, Technology transition concept
   * <nicals.mietz@bee42.com> @solidnerd
 
 ---
-## Reverse Proxy: Traefik
+## Reverse Proxy: Træfɪk
 
 ![](images/traefik-architecture.png)
 
@@ -30,7 +30,7 @@ The Purpose, Organisation, Technology transition concept
 * @emilevauge
 
 -
-### Important traefik facts
+### Important Træfɪk facts
 
 * Project founder is Emile Vauge (23.8.2015)
 * Status at 29.11.2016
@@ -71,7 +71,7 @@ The Purpose, Organisation, Technology transition concept
 * High Availability with cluster mode
 
 ---
-## Use an easy loadbalancer like traefik
+## Use an easy loadbalancer like Træfɪk
 
 ![](images/traefik.png)
 
@@ -79,13 +79,13 @@ The Purpose, Organisation, Technology transition concept
 * https://traefik.io/
 
 -
-### Have fun with traefik community
+### Have fun with Træfɪk community
 
 ![](images/traefik-logo.png)
 
 -
 ### ByExample:
-#### Simple traefik on your docker localhost
+#### Simple Træfɪk on your docker localhost
 
 ```
 $ cat >docker-compose.yml <<EOF
@@ -113,7 +113,7 @@ $ docker-compose down
 ```
 
 ---
-## Traefik with docker swarming mode
+## Træfɪk with docker swarming mode
 
 ![](images/docker-swarm-logo.png)
 
@@ -148,12 +148,45 @@ $ docker run -it -d -p 8000:8000 \
 * https://medium.com/@alexeiled/docker-swarm-cluster-with-docker-in-docker-on-macos-bdbb97d6bb07#.yry5s0jiv
 
 -
-### Labels
+### Træfɪk labels I
 
-* Add table
+* `traefik.backend=foo`
+  assign the container to foo backend
+* `traefik.backend.maxconn.amount=10`
+  set a maximum number of connections to the backend. Must be used in conjunction with the below label to take effect.
+* `traefik.backend.maxconn.extractorfunc=client.ip`
+  set the function to be used against the request to determine what to limit maximum connections to the backend by. Must be used in conjunction with the above label to take effect.
+* `traefik.backend.loadbalancer.method=drr`
+  override the default wrr load balancer algorithm
+* `traefik.backend.loadbalancer.sticky=true`
+  enable backend sticky sessions
+* `traefik.backend.circuitbreaker.expression=NetworkErrorRatio() > 0.5`
+  create a circuit breaker to be used against the backend
+* `traefik.port=80`
+  register this port. Useful when the container exposes multiples ports.
+* `traefik.protocol=https`
+  override the default http protocol
 
 -
-### Start traefik at docker swarming mode
+### træfɪk labels II
+
+* `traefik.weight=10`
+  assign this weight to the container
+* `traefik.enable=false`
+  disable this container in Træfɪk
+* `traefik.frontend.rule=Host:test.traefik.io`
+  override the default frontend rule (Default: `Host:{containerName}.{domain}`).
+* `traefik.frontend.passHostHeader=true`
+  forward client Host header to the backend.
+* `traefik.frontend.priority=10`
+  override default frontend priority
+* `traefik.frontend.entryPoints=http,https`
+  assign this frontend to entry points `http` and `https`. Overrides `defaultEntryPoints`.
+* `traefik.docker.network`
+  Set the docker network to use for connections to this container
+
+-
+### Start Træfɪk at docker swarming mode
 
 ```
 $ docker network create --driver=overlay traefik-net"
@@ -203,7 +236,7 @@ $ curl -H Host:whoami1.traefik http://localhost
 ```
 
 -
-### Traefik Dashboard
+### Træfɪk Dashboard
 
 ![](images/traefik-ui.png)
 
@@ -243,7 +276,7 @@ $ curl -H Host:whoami1.traefik http://localhost
 ---
 ## Summary
 
-* Traefik is a reverse proxy with easy setup and config
+* Træfɪk is a reverse proxy with easy setup and config
 * HTTP/1.1, HTTP/2 and websocket support
 * Auto config with multiple service discoveries
   * Kubernetes
@@ -282,7 +315,7 @@ More Training: http://www.bee42.com/training/
 
 ![](images/docker-camp.jpg)
 
-* 1.12 Docker Meetup Bochum - Traefik
+* 1.12 Docker Meetup Bochum - Træfɪk
 * 5.12 DevOpsCon Docker Basic Workshop (Munich)
 * 8.12 DevOpsCOn Docker Expert OpenSpace Workshop (Munich)
 * 12-14.12 Docker Camp at Berlin
