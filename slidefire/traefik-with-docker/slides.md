@@ -209,6 +209,22 @@ $ docker service create \
 * https://github.com/containous/traefik/blob/master/docs/user-guide/swarm-mode.md
 
 -
+#### Start a registry as service
+
+```
+$ docker service create --name registry --publish 5000:5000 registry:2
+$ curl localhost:5000/v2/_catalog
+```
+
+push your service image
+
+```
+$ DOCKER_REGISTRY=localhost:5000
+$ docker tag emilevauge/whoami $DOCKER_REGISTRY/emilevauge/whoami
+$ docker push $DOCKER_REGISTRY/emilevauge/whoami
+```
+
+-
 #### Deploy a new swarm services
 
 Create whoami services
@@ -218,12 +234,12 @@ $ docker service create \
     --name whoami0 \
     --label traefik.port=80 \
     --network traefik-net \
-    emilevauge/whoami
+    $DOCKER_REGISTRY/emilevauge/whoami
 $ docker service create \
     --name whoami1 \
     --label traefik.port=80 \
     --network traefik-net \
-    emilevauge/whoami"
+    $DOCKER_REGISTRY/emilevauge/whoami
 ```
 
 Access the services
