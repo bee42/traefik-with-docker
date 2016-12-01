@@ -19,5 +19,5 @@ Feedback welcome
 
 
   [1]: https://www.meetup.com/de-DE/Docker-Bochum/events/235649414/
-  [2]: https://speakerdeck.com/rossbachp/traefik-with-docker-meetup-bochum-2016-12
+  [2]: https://speakerdeck.com/rossbachp/traefik-with-docker-docker-meetup-bochum-2016-12
   [3]: http://twitter.com/PRossbach
