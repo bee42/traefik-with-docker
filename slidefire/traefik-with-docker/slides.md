@@ -37,7 +37,7 @@ The Purpose, Organisation, Technology transition service
   * 5419 Stars
   * 309 issues closed
   * 78 Contributors
-  * x Maintainer
+  * 6 Maintainer
 
 ***
 * https://github.com/containous/traefik
@@ -137,12 +137,11 @@ $ SWARM_MASTER=$(docker info | grep -w 'Node Address' | awk '{print $3}')
 $ NUM_WORKERS=3
 $ for i in $(seq "${NUM_WORKERS}"); do \
     docker run -d --privileged --name worker-${i} \
-    --hostname=worker-${i} -p ${i}2375:2375 docker:1.13.0-r2-dind \
-      docker --host=localhost:${i}2375 \
-      swarm join --token ${SWARM_TOKEN} ${SWARM_MASTER}:2377 \
+    --hostname=worker-${i} -p ${i}2375:2375 docker:1.13.0-rc2-dind
+    docker --host=localhost:${i}2375 \
+      swarm join --token ${SWARM_TOKEN} ${SWARM_MASTER}:2377
 done
-$ docker run -it -d -p 8000:8000 \
-    -e HOST=localhost -e PORT=8000 \
+$ docker run -it -d -p 5080:8000 \
     -v /var/run/docker.sock:/var/run/docker.sock \
     manomarks/visualizer
 ```
@@ -180,7 +179,9 @@ $ docker service create \
 #### Start a registry as service
 
 ```
-$ docker service create --name registry --publish 5000:5000 registry:2
+$ docker service create --name registry \
+  --constraint=node.role==manager \
+  --publish 5000:5000 registry:2
 $ curl localhost:5000/v2/_catalog
 ```
 
@@ -199,12 +200,12 @@ Create whoami services
 
 ```
 $ docker service create \
-    --name whoami0 \
+    --name whoami1 \
     --label traefik.port=80 \
     --network traefik-net \
     $DOCKER_REGISTRY/emilevauge/whoami
 $ docker service create \
-    --name whoami1 \
+    --name whoami2 \
     --label traefik.port=80 \
     --network traefik-net \
     $DOCKER_REGISTRY/emilevauge/whoami
@@ -213,10 +214,10 @@ $ docker service create \
 Access the services
 
 ```
-$ docker service update --replicas 2  whoami0
-$ docker service scale whoami0=4 whoami1=3
-$ curl -H Host:whoami0.traefik http://localhost
+$ docker service update --replicas 2  whoami1
+$ docker service scale whoami1=4 whoami2=3
 $ curl -H Host:whoami1.traefik http://localhost
+$ curl -H Host:whoami2.traefik http://localhost
 ```
 
 -
@@ -369,6 +370,9 @@ $ curl -L http://localhost:8080/health
 ### Letsencrypt flow
 
 ![](images/letsencrypt-flow.png)
+
+***
+* https://docs.traefik.io/toml/#acme-lets-encrypt-configuration
 
 -
 ### Better TSL support
