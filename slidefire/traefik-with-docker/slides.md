@@ -43,12 +43,13 @@ The Purpose, Organisation, Technology transition service
 * https://github.com/containous/traefik
 
 -
-### Features I
+### Træfɪk Features I
 
 * It's fast
 * No dependency hell, single binary made with go
 * Rest API
-* Multiple backends supported: Docker, Swarm, Kubernetes, Marathon, Mesos,
+* Multiple backends supported:
+  * Docker, Swarm, Kubernetes, Marathon, Mesos,
   * Consul, Etcd, and more to come
 * Watchers for backends, can listen for changes in backends to apply a new configuration automatically
 * Hot-reloading of configuration. No need to restart the process
@@ -57,7 +58,7 @@ The Purpose, Organisation, Technology transition service
 * Round Robin, rebalancer load-balancers
 
 -
-### Features II
+### Træfɪk Features II
 
 * Rest Metrics
 * Tiny official docker image included
@@ -89,20 +90,24 @@ The Purpose, Organisation, Technology transition service
 
 ```
 $ cat >docker-compose.yml <<EOF
-traefik:
-  image: traefik
-  command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
-  ports:
-    - "80:80"
-    - "8080:8080"
-  volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-    - /dev/null:/traefik.toml
-whoami:
-  image: emilevauge/whoami
-  labels:
-    - "traefik.backend=whoami"
-    - "traefik.frontend.rule=Host:whoami.docker.localhost"
+version: "2"
+services:
+  traefik:
+    image: traefik
+    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
+    labels:
+      - "traefik.enable=false"
+  whoami:
+    image: emilevauge/whoami
+    labels:
+      - "traefik.backend=whoami"
+      - "traefik.frontend.rule=Host:whoami.docker.localhost"
 EOF
 $ docker-compose up -d
 $ curl -L -H Host:whoami.docker.localhost http://localhost
@@ -147,43 +152,6 @@ $ docker run -it -d -p 8000:8000 \
 * https://github.com/ManoMarks/docker-swarm-visualizer
 * https://medium.com/@alexeiled/docker-swarm-cluster-with-docker-in-docker-on-macos-bdbb97d6bb07#.yry5s0jiv
 
--
-### Træfɪk labels I
-
-* `traefik.backend=foo`
-  assign the container to foo backend
-* `traefik.backend.maxconn.amount=10`
-  set a maximum number of connections to the backend. Must be used in conjunction with the below label to take effect.
-* `traefik.backend.maxconn.extractorfunc=client.ip`
-  set the function to be used against the request to determine what to limit maximum connections to the backend by. Must be used in conjunction with the above label to take effect.
-* `traefik.backend.loadbalancer.method=drr`
-  override the default wrr load balancer algorithm
-* `traefik.backend.loadbalancer.sticky=true`
-  enable backend sticky sessions
-* `traefik.backend.circuitbreaker.expression=NetworkErrorRatio() > 0.5`
-  create a circuit breaker to be used against the backend
-* `traefik.port=80`
-  register this port. Useful when the container exposes multiples ports.
-* `traefik.protocol=https`
-  override the default http protocol
-
--
-### træfɪk labels II
-
-* `traefik.weight=10`
-  assign this weight to the container
-* `traefik.enable=false`
-  disable this container in Træfɪk
-* `traefik.frontend.rule=Host:test.traefik.io`
-  override the default frontend rule (Default: `Host:{containerName}.{domain}`).
-* `traefik.frontend.passHostHeader=true`
-  forward client Host header to the backend.
-* `traefik.frontend.priority=10`
-  override default frontend priority
-* `traefik.frontend.entryPoints=http,https`
-  assign this frontend to entry points `http` and `https`. Overrides `defaultEntryPoints`.
-* `traefik.docker.network`
-  Set the docker network to use for connections to this container
 
 -
 ### Start Træfɪk at docker swarming mode
@@ -252,9 +220,130 @@ $ curl -H Host:whoami1.traefik http://localhost
 ```
 
 -
+### Træfɪk EntryPoints
+
+```
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+      certFile = "tests/traefik.crt"
+      keyFile = "tests/traefik.key"
+```
+
+-
+### Træfɪk Rules
+
+```
+[frontends]
+  [frontends.frontend1]
+  backend = "backend2"
+    [frontends.frontend1.routes.test_1]
+    rule = "Host:test.localhost,test2.localhost"
+  [frontends.frontend2]
+  backend = "backend1"
+  passHostHeader = true
+  priority = 10
+  entrypoints = ["https"] # overrides defaultEntryPoints
+    [frontends.frontend2.routes.test_1]
+    rule = "Host:localhost,{subdomain:[a-z]+}.localhost"
+  [frontends.frontend3]
+  backend = "backend2"
+    [frontends.frontend3.routes.test_1]
+    rule = "Host:test3.localhost;Path:/test"
+```
+
+***
+* https://docs.traefik.io/basics/#frontends
+* https://docs.traefik.io/basics/#backends
+
+-
+### Træfɪk with docker
+
+* Docker socket support
+  * https://docs.traefik.io/#docker
+* Docker swarm proxy
+  * https://docs.traefik.io/user-guide/swarm/
+* Docker with swarming mode
+  * https://docs.traefik.io/user-guide/swarm-mode/
+
+-
+### Træfɪk labels I
+
+* `traefik.backend=foo`
+  assign the container to foo backend
+* `traefik.backend.maxconn.amount=10`
+  set a maximum number of connections to the backend. Must be used in conjunction with the below label to take effect.
+* `traefik.backend.maxconn.extractorfunc=client.ip`
+  set the function to be used against the request to determine what to limit maximum connections to the backend by. Must be used in conjunction with the above label to take effect.
+* `traefik.backend.loadbalancer.method=drr`
+  override the default wrr load balancer algorithm
+* `traefik.backend.loadbalancer.sticky=true`
+  enable backend sticky sessions
+* `traefik.backend.circuitbreaker.expression=NetworkErrorRatio() > 0.5`
+  create a circuit breaker to be used against the backend
+* `traefik.port=80`
+  register this port. Useful when the container exposes multiples ports.
+* `traefik.protocol=https`
+  override the default http protocol
+
+-
+### Træfɪk labels II
+
+* `traefik.weight=10`
+  assign this weight to the container
+* `traefik.enable=false`
+  disable this container in Træfɪk
+* `traefik.frontend.rule=Host:test.traefik.io`
+  override the default frontend rule (Default: `Host:{containerName}.{domain}`).
+* `traefik.frontend.passHostHeader=true`
+  forward client Host header to the backend.
+* `traefik.frontend.priority=10`
+  override default frontend priority
+* `traefik.frontend.entryPoints=http,https`
+  assign this frontend to entry points `http` and `https`. Overrides `defaultEntryPoints`.
+* `traefik.docker.network`
+  Set the docker network to use for connections to this container
+
+-
 ### Træfɪk Dashboard
 
 ![](images/traefik-ui.png)
+
+-
+### Træfɪk Health
+
+![](images/traefik-health.png)
+
+-
+#### Træfɪk health api
+
+```
+$ curl -L http://localhost:8080/health
+{
+  "pid": 1,
+  "uptime": "32m13.34712143s",
+  "uptime_sec": 1933.34712143,
+  "time": "2016-12-01 05:35:52.819831303 +0000 UTC",
+  "unixtime": 1480570552,
+  "status_code_count": {},
+  "total_status_code_count": {
+    "200": 12,
+    "504": 5
+  },
+  "count": 0,
+  "total_count": 17,
+  "total_response_time": "2m30.038738015s",
+  "total_response_time_sec": 150.038738015,
+  "average_response_time": "8.825808118s",
+  "average_response_time_sec": 8.825808118
+}
+```
 
 -
 ### Build your own service
@@ -269,7 +358,7 @@ $ curl -H Host:whoami1.traefik http://localhost
 
 * Public TLS certs
 * Automatic certs rotation
-* Traefik use [Lego](https://github.com/xenolf/lego): The best Let's Encrypt library in go
+* Træfɪk use [Lego](https://github.com/xenolf/lego): The best Let's Encrypt library in go
 
 ***
 * https://letsencrypt.org/
@@ -439,6 +528,9 @@ $ ... – local machine
 ---
 ## Links
 
+* https:/traefik.io
+* http://programmableinfrastructure.com/guides/load-balancing/traefik/
+* http://www.abhishekamralkar.com/2015-11-20-traefik-reverse-proxy-microservice
 * http://www.infrabricks.de
 * http://www.bee42.com
 * https://www.docker.com
