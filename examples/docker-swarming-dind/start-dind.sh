@@ -17,6 +17,6 @@ for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
     ${SWARM_MASTER}:2377
 done
 
-docker run -it -d -p 5000:8080 \
+docker run -it -d -p 5080:8080 \
 -v /var/run/docker.sock:/var/run/docker.sock \
 manomarks/visualizer
