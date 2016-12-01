@@ -22,7 +22,7 @@ The Purpose, Organisation, Technology transition service
 ---
 ## Reverse Proxy: Træfɪk
 
-![](images/traefik-architecture.png)
+![](images/traefik-architecture-background.png)
 
 ***
 * https://traefik.io
@@ -290,9 +290,23 @@ $ curl -H Host:whoami1.traefik http://localhost
   * https://github.com/tboeghk/terrific-tls-tuning-tips
 
 ---
+### Sneak Peak: Træfɪk >1.2...
+
+* Redirect http to https on a per container (per frontend) basis
+* Support Opentracing
+* Traefik Stats System + Prometheus Exporter
+* Docker - 2 independant rules on same container
+* X-Forwarded-Proto and Websockets
+* Add arbitrary headers to requests
+
+***
+* https://github.com/containous/traefik/projects/2
+
+---
 ## Summary
 
 * Træfɪk is a reverse proxy with easy setup and config
+* Is supports static and dynamic Loadbalacing
 * HTTP/1.1, HTTP/2 and websocket support
 * Auto config with multiple service discoveries
   * Kubernetes
@@ -301,9 +315,9 @@ $ curl -H Host:whoami1.traefik http://localhost
   * ETCD
   * ...
 * Designed in mind for dynamic infrastructure and microservices
-* Cool simple Dashboard
-* Metric support
-* Easy and free TLS Support is now possible!
+* Cool simple dashboard
+* Metrics support
+* Easy and free TLS support is now possible!
 
 ---
 ## Build your systems for friends
