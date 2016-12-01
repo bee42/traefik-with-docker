@@ -276,39 +276,39 @@ $ curl -H Host:whoami1.traefik http://localhost
 ### Træfɪk labels I
 
 * `traefik.backend=foo`
-  assign the container to foo backend
+  * assign the container to foo backend
 * `traefik.backend.maxconn.amount=10`
-  set a maximum number of connections to the backend. Must be used in conjunction with the below label to take effect.
+  * set a maximum number of connections to the backend. Must be used in conjunction with the below label to take effect.
 * `traefik.backend.maxconn.extractorfunc=client.ip`
-  set the function to be used against the request to determine what to limit maximum connections to the backend by. Must be used in conjunction with the above label to take effect.
+  * set the function to be used against the request to determine what to limit maximum connections to the backend by. Must be used in conjunction with the above label to take effect.
 * `traefik.backend.loadbalancer.method=drr`
-  override the default wrr load balancer algorithm
+  * override the default wrr load balancer algorithm
 * `traefik.backend.loadbalancer.sticky=true`
-  enable backend sticky sessions
+  * enable backend sticky sessions
 * `traefik.backend.circuitbreaker.expression=NetworkErrorRatio() > 0.5`
-  create a circuit breaker to be used against the backend
+  * create a circuit breaker to be used against the backend
 * `traefik.port=80`
-  register this port. Useful when the container exposes multiples ports.
+  * register this port. Useful when the container exposes multiples ports.
 * `traefik.protocol=https`
-  override the default http protocol
+  * override the default http protocol
 
 -
 ### Træfɪk labels II
 
 * `traefik.weight=10`
-  assign this weight to the container
+  * assign this weight to the container
 * `traefik.enable=false`
-  disable this container in Træfɪk
+  * disable this container in Træfɪk
 * `traefik.frontend.rule=Host:test.traefik.io`
-  override the default frontend rule (Default: `Host:{containerName}.{domain}`).
+  * override the default frontend rule (Default: `Host:{containerName}.{domain}`).
 * `traefik.frontend.passHostHeader=true`
-  forward client Host header to the backend.
+  * forward client Host header to the backend.
 * `traefik.frontend.priority=10`
-  override default frontend priority
+  * override default frontend priority
 * `traefik.frontend.entryPoints=http,https`
-  assign this frontend to entry points `http` and `https`. Overrides `defaultEntryPoints`.
+  * assign this frontend to entry points `http` and `https`. Overrides `defaultEntryPoints`.
 * `traefik.docker.network`
-  Set the docker network to use for connections to this container
+  * Set the docker network to use for connections to this container
 
 -
 ### Træfɪk Dashboard
