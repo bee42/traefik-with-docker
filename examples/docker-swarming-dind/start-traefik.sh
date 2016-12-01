@@ -1,6 +1,7 @@
 #!/bin/bash
 
-docker network create --driver=overlay traefik-net"
+docker network create --driver=overlay traefik-net
+
 docker service create \
   --name traefik \
   --constraint=node.role==manager \
@@ -13,4 +14,4 @@ docker service create \
   --docker.swarmmode \
   --docker.domain=traefik \
   --docker.watch \
-  --web"
+  --web
