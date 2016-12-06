@@ -8,9 +8,10 @@ if [ ! -z "$1" ] ; then
 fi
 
 for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
-    docker exec -ti worker-${WORKER_NUMBER} docker swarm leave 
+    docker exec -ti worker-${WORKER_NUMBER} docker swarm leave
     docker rm -f --name worker-${WORKER_NUMBER}
 done
 
+docker service rm registry
 docker rm -f visualizer
 docker swarm leave -f
