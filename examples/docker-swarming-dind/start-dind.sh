@@ -22,3 +22,7 @@ done
 docker run -it -d -p 5080:8080 --name visualizer  \
 -v /var/run/docker.sock:/var/run/docker.sock \
 manomarks/visualizer
+
+docker service create --name registry \
+ --constraint 'node.role == manager' \
+ --publish 5000:5000 registry:2
