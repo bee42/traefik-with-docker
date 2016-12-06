@@ -14,7 +14,7 @@ for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
     docker run -d --privileged --name worker-${WORKER_NUMBER} \
       --hostname=worker-${WORKER_NUMBER} \
       -p ${WORKER_NUMBER}2375:2375 docker:1.13.0-rc2-dind
-    docker --host=localhost:${WORKER_NUMBER}2375 swarm join \
+    docker --host=127.0.0.1:${WORKER_NUMBER}2375 swarm join \
       --token ${SWARM_TOKEN} \
       ${SWARM_MASTER}:2377
 done
