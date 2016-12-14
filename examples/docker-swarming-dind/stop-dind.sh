@@ -9,7 +9,7 @@ fi
 
 for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
     docker exec -ti worker-${WORKER_NUMBER} docker swarm leave
-    docker rm -f --name worker-${WORKER_NUMBER}
+    docker rm -f worker-${WORKER_NUMBER}
 done
 
 docker service rm registry
