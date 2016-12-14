@@ -13,7 +13,7 @@ fi
 for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
     docker run -d --privileged --name worker-${WORKER_NUMBER} \
       --hostname=worker-${WORKER_NUMBER} \
-      -p ${WORKER_NUMBER}2375:2375 docker:1.13.0-rc2-dind
+      -p ${WORKER_NUMBER}2375:2375 docker:1.13.0-rc3-dind
     sleep 2
     docker --host=0.0.0.0:${WORKER_NUMBER}2375 swarm join \
       --token ${SWARM_TOKEN} \
