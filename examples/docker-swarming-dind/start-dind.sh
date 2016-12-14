@@ -15,7 +15,7 @@ for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
       --hostname=worker-${WORKER_NUMBER} \
       -p ${WORKER_NUMBER}2375:2375 docker:1.13.0-rc2-dind
     sleep 2
-    docker --host=0.0.0.1:${WORKER_NUMBER}2375 swarm join \
+    docker --host=0.0.0.0:${WORKER_NUMBER}2375 swarm join \
       --token ${SWARM_TOKEN} \
       ${SWARM_MASTER}:2377
 done
