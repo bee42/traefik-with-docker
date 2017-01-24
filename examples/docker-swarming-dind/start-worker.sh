@@ -14,7 +14,12 @@ SWARM_MASTER=$(docker info | grep -w 'Node Address' | awk '{print $3}')
 
 docker run -d --privileged --name worker-${WORKER_NUMBER} \
   --hostname=worker-${WORKER_NUMBER} \
-  -p ${WORKER_NUMBER}2375:2375 docker:1.13.0-rc2-dind
+  -p ${WORKER_NUMBER}2375:2375 \
+  docker:1.13.0-dind \
+  --registry-mirror http://127.0.0.1:5001
+
+sleep 2
+
 docker --host=localhost:${WORKER_NUMBER}2375 swarm join \
   --token ${SWARM_TOKEN} \
   ${SWARM_MASTER}:2377
