@@ -12,6 +12,7 @@ for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
     docker rm -f worker-${WORKER_NUMBER}
 done
 
+docker service rm registry_mirror
 docker service rm registry
 docker rm -f visualizer
 docker swarm leave -f

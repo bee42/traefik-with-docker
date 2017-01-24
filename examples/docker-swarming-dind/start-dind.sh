@@ -10,10 +10,25 @@ if [ ! -z "$2" ] ; then
   NUM_WORKERS=$2
 fi
 
+mkdir -p $PWD/rdata
+
+docker service create --name registry_mirror \
+ --constraint 'node.role == manager' \
+ --mount type=bind,source=$PWD/rdata,target=/var/lib/registry \
+ -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io \
+ --publish 5001:5000 \
+ registry:2
+
+sleep 5
+
+echo "Start swarm worker"
+
 for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
     docker run -d --privileged --name worker-${WORKER_NUMBER} \
       --hostname=worker-${WORKER_NUMBER} \
-      -p ${WORKER_NUMBER}2375:2375 docker:1.13.0-dind
+      -p ${WORKER_NUMBER}2375:2375 \
+      docker:1.13.0-dind \
+      --registry-mirror http://127.0.0.1:5001
     sleep 2
     docker --host=127.0.0.1:${WORKER_NUMBER}2375 swarm join \
       --token ${SWARM_TOKEN} \

@@ -27,3 +27,8 @@ Start this presentation with
 
 Regards
 Peter Rossbach (peter.rossbach@bee42.com) @PRossbach
+
+## Links
+
+* https://codefresh.io/blog/deploy-docker-compose-v3-swarm-mode-cluster/
+* https://traefik.io/

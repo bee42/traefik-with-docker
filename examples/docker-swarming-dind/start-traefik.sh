@@ -9,7 +9,7 @@ docker service create \
   --publish 8080:8080 \
   --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
   --network traefik-net \
-  traefik:v1.1.0 \
+  traefik:v1.1.2 \
   --docker \
   --docker.swarmmode \
   --docker.domain=traefik \
