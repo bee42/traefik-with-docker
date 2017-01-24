@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e -x
 
-docker swarm init
+docker swarm init $1
 SWARM_TOKEN=$(docker swarm join-token -q worker)
 SWARM_MASTER=$(docker info | grep -w 'Node Address' | awk '{print $3}')
 : NUM_WORKERS=${NUM_WORKERS:=3}
 
-if [ ! -z "$1" ] ; then
-  NUM_WORKERS=$1
+if [ ! -z "$2" ] ; then
+  NUM_WORKERS=$2
 fi
 
 for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
