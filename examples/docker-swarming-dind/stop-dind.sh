@@ -8,11 +8,22 @@ if [ ! -z "$1" ] ; then
 fi
 
 for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
+  if [ "$(docker ps --filter name=worker-${WORKER_NUMBER} -q)" ];then
     docker exec -ti worker-${WORKER_NUMBER} docker swarm leave
     docker rm -f worker-${WORKER_NUMBER}
+  fi
 done
 
-docker service rm registry_mirror
-docker service rm registry
-docker rm -f visualizer
+if [ ! "$(docker service ls --filter name=mirror_registry -q)" ];then
+  docker service rm mirror_registry
+fi
+
+if [ ! "$(docker service ls --filter name=registry -q)" ];then
+  docker service rm registry
+fi
+
+if [ "$(docker ps --filter name=visualizer -q)" ];then
+  docker rm -f visualizer
+fi
+
 docker swarm leave -f

@@ -11,8 +11,8 @@ SWARM_MASTER=$(docker info | grep -w 'Node Address' | awk '{print $3}')
 
 mkdir -p $PWD/rdata
 
-if [ ! "$(docker service ls --filter name=registry_mirror -q)" ];then
-  docker service create --name registry_mirror \
+if [ ! "$(docker service ls --filter name=mirror_registry -q)" ];then
+  docker service create --name mirror_registry \
    --constraint 'node.role == manager' \
    --mount type=bind,source=$PWD/rdata,target=/var/lib/registry \
    -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io \
@@ -38,7 +38,7 @@ for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
   fi
 done
 
-if [ ! "$(docker ps --filter name=visualizer -q)" ];then
+if [ ! "$(docker ps  --filter name=visualizer -q)" ];then
   docker run -it -d \
     -p 5080:8080 \
     --name visualizer  \
