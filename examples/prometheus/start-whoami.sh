@@ -9,5 +9,5 @@ if [ ! "$(docker service ls --filter name=whoami -q)" ];then
     --name whoami \
     --label traefik.port=80 \
     --network $network \
-    127.0.0.1:5000/emilevauge/whoami"
+    127.0.0.1:5000/emilevauge/whoami
 fi
