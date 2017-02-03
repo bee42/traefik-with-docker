@@ -7,6 +7,12 @@ $ ./start-traefik.sh
 $ ./start-whoami.sh
 ```
 
+start dind at private network interface
+
+```
+$ ./start-dind.sh --advertise-addr 10.14.0.11
+```
+
 Lookup and scale
 
 ```
