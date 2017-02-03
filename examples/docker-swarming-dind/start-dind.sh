@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e -x
 
-if [ "$(docker info --format '{{ json .Swarm }}' |jq '.NodeID')" == "\"\""];then
+if [ "$(docker info --format '{{ json .Swarm }}' |jq '.NodeID')" == "\"\"" ];then
   docker swarm init $@
 fi
 
@@ -25,7 +25,7 @@ fi
 echo "Start swarm worker"
 
 for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
-  if [ ! "$(docker service ls --filter name=worker-${WORKER_NUMBER} -q)" ];then
+  if [ ! "$(docker ps --filter name=worker-${WORKER_NUMBER} -q)" ];then
     docker run -d --privileged --name worker-${WORKER_NUMBER} \
       --hostname=worker-${WORKER_NUMBER} \
       -p ${WORKER_NUMBER}2375:2375 \
@@ -38,9 +38,9 @@ for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
   fi
 done
 
-if [ ! "$(docker service ls --filter name=visualizer -q)" ];then
-  docker run -it -d
-    -p 5080:8080
+if [ ! "$(docker ps --filter name=visualizer -q)" ];then
+  docker run -it -d \
+    -p 5080:8080 \
     --name visualizer  \
     -v /var/run/docker.sock:/var/run/docker.sock \
      manomarks/visualizer
