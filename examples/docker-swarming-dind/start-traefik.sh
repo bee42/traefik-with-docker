@@ -3,7 +3,7 @@
 # create traefik-net network
 network=traefik-net
 if [ ! "$(docker network ls --filter name=$network -q)" ];then
-  docker network create --driver=overlay $network
+  docker network create --driver=overlay --attachable $network
 fi
 
 if [ ! "$(docker service ls --filter name=traefik -q)" ];then

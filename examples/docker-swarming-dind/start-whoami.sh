@@ -5,7 +5,7 @@ set -e -x
 # create traefik-net network
 network=traefik-net
 if [ ! "$(docker network ls --filter name=$network -q)" ];then
-    docker network create --driver=overlay  $network
+    docker network create --driver=overlay --attachable $network
 fi
 
 # pull image if not available

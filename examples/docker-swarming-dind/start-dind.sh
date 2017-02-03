@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e -x
 
-docker swarm init $@
+if [ "$(docker info --format '{{ json .Swarm }}' |jq '.NodeID')" == "\"\""];then
+  docker swarm init $@
+fi
 
 SWARM_TOKEN=$(docker swarm join-token -q worker)
 SWARM_MASTER=$(docker info | grep -w 'Node Address' | awk '{print $3}')
