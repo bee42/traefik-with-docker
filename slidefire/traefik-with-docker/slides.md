@@ -1,5 +1,4 @@
-# bee42 docker meetup talk
-## Træfɪk with Docker
+# Træfɪk with Docker
 
 ![](images/traefik-logo.png)
 
@@ -137,7 +136,8 @@ $ SWARM_MASTER=$(docker info | grep -w 'Node Address' | awk '{print $3}')
 $ NUM_WORKERS=3
 $ for i in $(seq "${NUM_WORKERS}"); do \
     docker run -d --privileged --name worker-${i} \
-    --hostname=worker-${i} -p ${i}2375:2375 docker:1.13.0-rc2-dind
+    --hostname=worker-${i} -p ${i}2375:2375 docker:1.13.0-dind
+    sleep 2
     docker --host=localhost:${i}2375 \
       swarm join --token ${SWARM_TOKEN} ${SWARM_MASTER}:2377
 done
@@ -156,7 +156,7 @@ $ docker run -it -d -p 5080:8000 \
 ### Start Træfɪk at docker swarming mode
 
 ```
-$ docker network create --driver=overlay traefik-net"
+$ docker network create --driver=overlay --attachable traefik-net"
 $ docker service create \
   --name traefik \
   --constraint=node.role==manager \
@@ -164,7 +164,7 @@ $ docker service create \
   --publish 8080:8080 \
   --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
   --network traefik-net \
-  traefik:v1.1.0 \
+  traefik:v1.1.2 \
   --docker \
   --docker.swarmmode \
   --docker.domain=traefik \
