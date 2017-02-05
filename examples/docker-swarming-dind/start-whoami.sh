@@ -3,10 +3,12 @@
 set -e -x
 
 # create traefik-net network
-network=traefik-net
-if [ ! "$(docker network ls --filter name=$network -q)" ];then
-    docker network create --driver=overlay --attachable $network
+
+: NETWORK=${NETWORK:-traefik-net}
+if [ ! "$(docker network ls --filter name=$NETWORK -q)" ];then
+  docker network create --driver=overlay --attachable $NETWORK
 fi
+
 
 # pull image if not available
 whoami=emilevauge/whoami
@@ -27,7 +29,7 @@ for i in $(seq $SERVICES_COUNT); do
     docker service create \
       --name whoami${i} \
       --label traefik.port=80 \
-      --network $network \
+      --network $NETWORK \
      127.0.0.1:5000/$whoami
   fi
 done
