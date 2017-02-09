@@ -21,7 +21,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.schema-version="1.0" \
       org.label-schema.vendor="bee42 solutions gmbh" \
       org.label-schema.description="Scrapes node-exporter, cadvisor, prometheus and swarm metrics (4999 port)." \
-      org.label-schema.usage="/README.md" \
-      org.label-schema.url="https://github.com/bee42/traefik-with-docker/blob/master/README.md"
+      org.label-schema.usage="examples/prometheus/README.md" \
+      org.label-schema.url="https://github.com/bee42/traefik-with-docker/blob/master/examples/prometheus/README.md"
 
 COPY etc /etc/prometheus
