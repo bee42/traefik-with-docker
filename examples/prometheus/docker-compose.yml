@@ -69,7 +69,7 @@ services:
      - monitoring
     labels:
       - com.docker.stack.namespace=monitoring
-    command: [ "-config.file=/etc/prometheus/prometheus.yml", "-storage.local.path=/prometheus",      "web.console.libraries=/etc/prometheus/console_libraries", "-web.console.templates=/etc/prometheus/consoles", "-alertmanager.url=http://alertmanager:9093"]
+    command: [ "-config.file=/etc/prometheus/prometheus.yml", "-storage.local.path=/prometheus",      "-web.console.libraries=/etc/prometheus/console_libraries", "-web.console.templates=/etc/prometheus/consoles", "-alertmanager.url=http://alertmanager:9093"]
     deploy:
       mode: replicated
       labels: [com.docker.stack.namespace=monitoring]
@@ -88,9 +88,6 @@ services:
       - "GF_SERVER_ROOT_URL=http://grafana.${CLUSTER_DOMAIN}"
       - "GF_SECURITY_ADMIN_PASSWORD=$GF_PASSWORD"
       - "PROMETHEUS_ENDPOINT=http://prometheus:9090"
-      - "ELASTICSEARCH_ENDPOINT=$ES_ADDRESS"
-      - "ELASTICSEARCH_USER=$ES_USERNAME"
-      - "ELASTICSEARCH_PASSWORD=$ES_PASSWORD"
     deploy:
       mode: replicated
       labels: [com.docker.stack.namespace=monitoring]
