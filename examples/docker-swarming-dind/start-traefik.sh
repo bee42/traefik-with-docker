@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # create traefik-net network
-: NETWORK=${NETWORK:-traefik-net}
+: NETWORK=${NETWORK:=traefik-net}
 if [ ! "$(docker network ls --filter name=$NETWORK -q)" ];then
   docker network create --driver=overlay --attachable $NETWORK
 fi
@@ -17,11 +17,13 @@ if [ ! "$(docker service ls --filter name=traefik -q)" ];then
     --publish 80:80 \
     --publish 8080:8080 \
     --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
-    --network $NETWORK \
-   traefik:v1.1.2 \
+    --network ${NETWORK} \
+   traefik:v1.2.0-rc1 \
+     --web \
+     --web.metrics.prometheus \
+     --web.metrics.prometheus.buckets="100,300" \
     --docker \
     --docker.swarmmode \
     --docker.domain=traefik \
-    --docker.watch \
-    --web
+    --docker.watch
 fi
