@@ -1,10 +1,15 @@
 # Træfɪk with Docker Swarming
 
-## Big Party
+This example use a local DinD Swarming Cluster to show
+how you can use docker swarming for your microservices.
 
-### Loadbalancing with Træfɪk at a docker swarming fleet
+We use [træfɪk](https://traefik.io/) for simplify your dynamic service publishing and http reverse proxy.
 
-Docker Meetup Bochum 1.12.2016 : Træfɪk and more Træfɪk
+We add a lot of more example and fix some scripts for better handling.
+
+## Loadbalancing with Træfɪk at a docker swarming fleet
+
+Proudly present first at : Docker Meetup Bochum 1.12.2016 : Træfɪk and more Træfɪk
 
 * https://www.meetup.com/de-DE/Docker-Bochum/events/235649414/
 
@@ -16,7 +21,7 @@ but also some useful tips to use Træfɪk with docker swarming mode
 
 ![](slidefire/traefik-with-docker/images/traefik.png)
 
-Test your setup with Dind...
+Test your setup with DinD...
 
 ![](slidefire/traefik-with-docker/images/docker-swarming-dind.png)
 
@@ -27,6 +32,7 @@ Start this presentation with
 
 Regards
 Peter Rossbach (peter.rossbach@bee42.com) @PRossbach
+Niclas Mietz (niclas.mietz@bee42.com) @solidnerd
 
 ## Links
 
