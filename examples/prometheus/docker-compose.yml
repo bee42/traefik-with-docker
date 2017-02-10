@@ -33,14 +33,15 @@ services:
       - /sys/host/sys
       - /:/rootfs
       - /etc/hostname:/etc/host_hostname
-    environments:
-       - HOST_HOSTNAME=/etc/host_hostname
-    command: [ "-collector.procfs /host/proc", "-collector.sysfs /host/sys", "-collector.filesystem.ignored-mount-points '^/(sys|proc|dev|host|etc)($|/)'", "--collector.textfile.directory /etc/node-exporter/", "--collectors.enabled='conntrack,diskstats,entropy,filefd,filesystem,loadavg,mdadm,meminfo,netdev,netstat,stat,textfile,time,vmstat,ipvs'" ]
+    environment:
+       - "HOST_HOSTNAME=/etc/host_hostname"
+    command: [ "-collector.procfs", "/host/proc", "-collector.sysfs", "/host/sys", "-collector.filesystem.ignored-mount-points", '^/(sys|proc|dev|host|etc)($$|/)', "--collector.textfile.directory", "/etc/node-exporter/", "--collectors.enabled", "conntrack,diskstats,entropy,filefd,filesystem,loadavg,mdadm,meminfo,netdev,netstat,stat,textfile,time,vmstat,ipvs" ]
     deploy:
       mode: global
       labels: [com.docker.stack.namespace=monitoring]
       placement:
         constraints: [node.role == worker]
+
   alertmanager:
     image: basi/alertmanager
     networks:
@@ -49,9 +50,8 @@ services:
       - com.docker.stack.namespace=monitoring
     ports:
       - "9093:9093"
-    environments:
-      - SLACK_API=https://hooks.slack.com/services/TOKEN-HERE
-      - LOGSTASH_URL=http://logstash:8080/
+    environment:
+      - SLACK_API=https://hooks.slack.com/services/${SLACK_TOKEN}
     command: ["-config.file=/etc/alertmanager/config.yml"]
     deploy:
       mode: replicated
@@ -59,7 +59,7 @@ services:
       placement:
         constraints: [node.role == manager]
 
-   prometheus:
+  prometheus:
     build:
       context: .
     ports:
@@ -84,9 +84,9 @@ services:
       - com.docker.stack.namespace=monitoring
     ports:
       - "3000:3000"
-    environments:
-      - "GF_SERVER_ROOT_URL=http://grafana.${CLUSTER_DOMAIN}"
-      - "GF_SECURITY_ADMIN_PASSWORD=$GF_PASSWORD"
+    environment:
+      - "GF_SERVER_ROOT_URL=http://127.0.0.1.3000"
+      - "GF_SECURITY_ADMIN_PASSWORD=12345678"
       - "PROMETHEUS_ENDPOINT=http://prometheus:9090"
     deploy:
       mode: replicated
