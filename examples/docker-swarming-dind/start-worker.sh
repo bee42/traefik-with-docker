@@ -17,7 +17,9 @@ if [ ! "$(docker service ls --filter name=worker-${WORKER_NUMBER} -q)" ];then
     --hostname=worker-${WORKER_NUMBER} \
     -p ${WORKER_NUMBER}2375:2375 \
     docker:1.13.0-dind \
-    --registry-mirror http://127.0.0.1:5001
+    --registry-mirror http://127.0.0.1:5001 \
+    --metrics-addr 0.0.0.0:4999 \
+    --experimental
 
   sleep 2
 
