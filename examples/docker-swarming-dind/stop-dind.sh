@@ -8,7 +8,7 @@ if [ ! -z "$1" ] ; then
 fi
 
 for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
-  if [ "$(docker ps --filter name=worker-${WORKER_NUMBER} -q)" ];then
+  if [ "$(docker ps -a --filter name=worker-${WORKER_NUMBER} -q)" ];then
     docker exec -ti worker-${WORKER_NUMBER} docker swarm leave
     docker rm -f worker-${WORKER_NUMBER}
   fi
