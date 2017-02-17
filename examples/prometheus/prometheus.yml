@@ -13,4 +13,10 @@ global:
       dns_sd_configs:
         - names: ['tasks.cadvisor']
           type: 'A'
-          port: 8080  
+          port: 8080
+    - job_name: 'docker-exporter'
+      dns_sd_configs:
+      - names:
+        - 'tasks.docker-exporter'
+        type: 'A'
+        port: 4999

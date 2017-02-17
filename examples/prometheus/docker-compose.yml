@@ -29,8 +29,8 @@ services:
     labels:
       - com.docker.stack.namespace=monitoring
     volumes:
-      - /proc/host:/proc
-      - /sys/host:/sys
+      - /proc:/proc/host
+      - /sys:/sys/host
       - /:/rootfs:ro
       - /etc/hostname:/etc/host_hostname
     environment:

@@ -34,3 +34,4 @@ In case you have activated the metrics endpoint in your docker swarm cluster you
 ## Links
 
 * https://github.com/bvis/docker-node-exporter
+* https://github.com/bvis/docker-prometheus-swarm
