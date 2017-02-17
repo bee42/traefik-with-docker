@@ -58,6 +58,8 @@ services:
 
   alertmanager:
     image: basi/alertmanager
+    depends_on:
+      - prometheus
     networks:
       - monitoring
     labels:
@@ -79,6 +81,10 @@ services:
     ports:
       - "9090:9090"
     image: 127.0.0.1:5000/bee42/prometheus:latest
+    depends_on:
+      - node-exporter
+      - cadvisor
+      - docker-exporter
     networks:
      - monitoring
     labels:
@@ -92,6 +98,8 @@ services:
 
   grafana:
     image: basi/grafana
+    depends_on:
+      - prometheus
     networks:
      - monitoring
     labels:
