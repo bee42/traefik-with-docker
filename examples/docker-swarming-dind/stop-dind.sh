@@ -14,11 +14,11 @@ for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
   fi
 done
 
-if [ ! "$(docker service ls --filter name=mirror_registry -q)" ];then
+if [ "$(docker service ls --filter name=mirror_registry -q)" ];then
   docker service rm mirror_registry
 fi
 
-if [ ! "$(docker service ls --filter name=registry -q)" ];then
+if [ "$(docker service ls --filter name=registry -q)" ];then
   docker service rm registry
 fi
 
