@@ -40,22 +40,22 @@ services:
       mode: global
       labels: [com.docker.stack.namespace=monitoring]
       placement:
-        constraints: [node.role == worker]
+        constraints: [node.role == manager]
 
-  docker-exporter:
-    image: basi/socat:v0.1.0
-    networks:
-      - monitoring
-    labels:
-      - com.docker.stack.namespace=monitoring
-    ports:
-      - "4999:4999"
-    environment:
-      - IN=172.18.0.1:4999
-    deploy:
-      mode: global
-      labels: [com.docker.stack.namespace=monitoring]
-
+#  docker-exporter:
+#    image: basi/socat:v0.1.0
+#    networks:
+#      - monitoring
+#    labels:
+#      - com.docker.stack.namespace=monitoring
+#    ports:
+#      - "4999:4999"
+#    environment:
+#      - IN=172.18.0.1:4999
+#    deploy:
+#      mode: global
+#      labels: [com.docker.stack.namespace=monitoring]
+#
   alertmanager:
     image: basi/alertmanager
     depends_on:
@@ -84,7 +84,7 @@ services:
     depends_on:
       - node-exporter
       - cadvisor
-      - docker-exporter
+#      - docker-exporter
     networks:
      - monitoring
     labels:
