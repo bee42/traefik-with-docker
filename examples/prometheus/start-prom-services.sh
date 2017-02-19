@@ -91,5 +91,6 @@ if [ ! "$(docker service ls --filter name=grafana -q)" ];then
     -e "GF_SERVER_ROOT_URL=http://grafana" \
     -e "GF_SECURITY_ADMIN_PASSWORD=$GF_PASSWORD" \
     -e "PROMETHEUS_ENDPOINT=http://prometheus:9090" \
+    -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource" \
     basi/grafana
 fi
