@@ -110,6 +110,21 @@ __Warning__: Adjust Timeslot of dashboard to 2h!
 
 The time between the dashboard user and the container / host appears to be different.
 
+### Monitoring the Rate, Error and Duration of every service
+
+* https://www.weave.works/prometheus-and-kubernetes-monitoring-your-applications/
+  * PROM QL queries
+  * Alertrules
+  * Scraping from kubernetes service
+
+* https://github.com/weaveworks/grafanalib
+  * Generation of Grafana dashboards
+  * RED Method
+
+* http://www.brendangregg.com/usemethod.html
+
+![](images/usemethod_flow.png)
+
 ## Prometheus
 
 ### cli
