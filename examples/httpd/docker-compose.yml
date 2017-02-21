@@ -1,0 +1,26 @@
+# http://stackoverflow.com/questions/42139605/how-do-you-manage-secret-values-with-docker-compose-v3-1
+# Here's an example of using a secret, my_secret, that's been created on the swarm via docker secret create:
+
+version: "3.1"
+networks:
+  traefik-net:
+     external: true
+services:
+  index:
+    build: .
+    image: 127.0.0.1:5000/bee42/index
+    ports:
+      - "5091:80"
+    networks:
+      - traefik-net
+    labels:
+       - traefik.enable=true
+       - traefik.port=80
+       - traefik.frontend.rule=Path=/hello
+    deploy:
+      mode: replicated
+      labels: [com.docker.stack.namespace=index]
+      placement:
+        constraints: [node.role == worker]
+ 
+  
