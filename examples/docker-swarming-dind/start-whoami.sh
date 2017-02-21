@@ -29,6 +29,7 @@ for i in $(seq $SERVICES_COUNT); do
     docker service create \
       --name whoami${i} \
       --label traefik.port=80 \
+      --label traefik.enable=true \
       --network $NETWORK \
      127.0.0.1:5000/$whoami
   fi
