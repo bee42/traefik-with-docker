@@ -19,11 +19,14 @@ if [ ! "$(docker service ls --filter name=traefik -q)" ];then
     --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
     --network ${NETWORK} \
    traefik:v1.2.0-rc1 \
+     --accesslogsfile=/access.log \
+     --checknewversion=false \
      --web \
      --web.metrics.prometheus \
      --web.metrics.prometheus.buckets="100,300" \
     --docker \
-    --docker.swarmmode \
+    --docker.exposedbydefault=false \
+    --docker.swarmmode=true \
     --docker.domain=traefik \
     --docker.watch
 fi
