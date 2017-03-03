@@ -32,8 +32,8 @@ fi
 if [ ! "$(docker service ls --filter name=cadvisor -q)" ];then
 
   docker service create --name cadvisor \
-    --network $network
     --mode global \
+    --network $network \
     --mount type=bind,source=/,target=/rootfs \
     --mount type=bind,source=/var/run,target=/var/run \
     --mount type=bind,source=/sys,target=/sys \
