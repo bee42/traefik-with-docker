@@ -30,6 +30,7 @@ for i in $(seq $SERVICES_COUNT); do
       --name whoami${i} \
       --label traefik.port=80 \
       --label traefik.enable=true \
+      --label traefik.backend.loadbalancer=drr \
       --network $NETWORK \
      127.0.0.1:5000/$whoami
   fi
