@@ -15,7 +15,10 @@ Please add your Slack Token!
 __ToDo__: check running and setup slack Token
 
 ```
-$ docker stack deploy --compose-file docker-compose.yml prometheus
+$ ./build.sh
+$ docker-compose build
+$ docker-compose push
+$ GF_PASSWORD=12345678 SLACK_TOKEN=xxx docker stack deploy --compose-file docker-compose.yml prometheus
 $ docker service ls
 ```
 If your need a attachable network it is currently not supported by docker-compose use an external network
