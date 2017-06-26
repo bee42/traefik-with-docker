@@ -15,6 +15,7 @@ mkdir -p $PWD/rdata
 
 if [ ! "$(docker service ls --filter name=mirror_registry -q)" ];then
   docker service create --name mirror_registry \
+   --detach=true \
    --constraint 'node.role == manager' \
    --mount type=bind,source=$PWD/rdata,target=/var/lib/registry \
    -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io \
@@ -54,6 +55,7 @@ fi
 
 if [ ! "$(docker service ls --filter name=registry -q)" ];then
   docker service create --name registry \
-   --constraint 'node.role == manager' \
-   --publish 5000:5000 registry:2
+    --detach=true \
+    --constraint 'node.role == manager' \
+    --publish 5000:5000 registry:2
 fi
