@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e -x
 
+DOCKER_WORKER_VERSION="17.06.0-ce-dind"
+
 if [ "$(docker info --format '{{ json .Swarm }}' |jq '.NodeID')" == "\"\"" ];then
   docker swarm init $@
 fi
@@ -29,7 +31,8 @@ for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
     docker run -d --privileged --name worker-${WORKER_NUMBER} \
       --hostname=worker-${WORKER_NUMBER} \
       -p ${WORKER_NUMBER}2375:2375 \
-      docker:1.13.1-dind \
+      docker:${DOCKER_WORKER_VERSION} \
+      --storage-driver=overlay2 \
       --registry-mirror http://127.0.0.1:5001 \
       --metrics-addr 0.0.0.0:4999 \
       --experimental
