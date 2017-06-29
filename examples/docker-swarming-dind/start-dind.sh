@@ -50,7 +50,7 @@ if [ ! "$(docker ps  --filter name=visualizer -q)" ];then
     --name visualizer  \
     --restart always \
     -v /var/run/docker.sock:/var/run/docker.sock \
-     manomarks/visualizer
+     dockersamples/visualizer
 fi
 
 if [ ! "$(docker service ls --filter name=registry -q)" ];then
