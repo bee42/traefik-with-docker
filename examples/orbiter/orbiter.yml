@@ -1,0 +1,8 @@
+utoscalers:
+  events:
+    provider: swarm
+    parameters:
+    policies:
+      autodetect_swarm/whoami:
+        up: 4
+        down: 3

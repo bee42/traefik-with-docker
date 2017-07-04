@@ -28,6 +28,7 @@ for i in $(seq $SERVICES_COUNT); do
   if [ ! "$(docker service ls --filter name=whoami${i} -q)" ];then
     docker service create \
       --name whoami${i} \
+      --label orbiter=true \
       --label traefik.port=80 \
       --label traefik.enable=true \
       --label traefik.backend.loadbalancer=drr \
