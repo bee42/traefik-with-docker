@@ -1,0 +1,22 @@
+version: "3.0"
+
+networks:
+  traefik-net:
+    external:
+      name: traefik-net
+
+services:
+  whoami:
+    image: 127.0.0.1:5000/emilevauge/whoami
+    networks:
+      - traefik-net
+    labels:
+      - com.docker.stack.namespace=traefik-net
+      - orbiter=true
+      - traefik.port=80
+      - traefik.enable=true
+      - traefik.backend.loadbalancer=drr
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.role == worker]
