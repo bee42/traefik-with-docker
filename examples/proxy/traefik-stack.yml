@@ -1,0 +1,49 @@
+version: "3.3"
+
+services:
+  proxy:
+    image: traefik:1.4.6-alpine
+    networks:
+      traefik:
+      dockersock:
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - dockerproxy
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == worker
+    tty: true
+    command:
+      - --docker
+      - --docker.EndPoint=http://dockerproxy:2375
+      - --docker.ExposedByDefault=false
+      - --docker.SwarmMode
+      - --docker.Watch
+  dockerproxy:
+    image: tecnativa/docker-socket-proxy
+    networks:
+      dockersock:
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      CONTAINERS: 1
+      NETWORKS: 1
+      SERVICES: 1
+      SWARM: 1
+      TASKS: 1
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager
+
+networks:
+    traefik:
+    dockersock:
+      driver_opts:
+        encrypted: 1
+

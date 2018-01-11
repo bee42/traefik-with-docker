@@ -1,0 +1,57 @@
+version: "3.3"
+
+services:
+  proxy:
+    image: traefik:1.4.6-alpine
+    networks:
+      traefik:
+      dockersock:
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    depends_on:
+      - dockerproxy
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == worker
+    tty: true
+    command:
+      - --debug
+      - --docker
+      - --docker.endpoint=tcp://dockerproxy:2375
+      - --docker.exposedbydefault=false
+      - --docker.swarmmode
+      - --docker.watch
+      - --docker.trace
+      - --accesslog.filepath=/access.log
+      - --accesslog
+      - --checknewversion=false
+      - --web
+      - --web.metrics.prometheus
+  dockerproxy:
+    image: tecnativa/docker-socket-proxy
+    networks:
+      dockersock:
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      CONTAINERS: 1
+      NETWORKS: 1
+      SERVICES: 1
+      SWARM: 1
+      TASKS: 1
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager
+
+networks:
+    traefik:
+      attachable: true
+    dockersock:
+      attachable: true
+
