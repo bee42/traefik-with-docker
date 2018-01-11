@@ -2,6 +2,8 @@
 
 
 ```
+# use this at Docker for Mac
+$ export DOCKER_ORCHESTRATOR=swarm
 $ ./start-dind.sh
 $ ./start-traefik.sh
 $ ./start-whoami.sh
@@ -27,3 +29,8 @@ stop the swarming DinD cluster
 ```
 $ ./stop-dind.sh
 ```
+
+## Links
+
+* https://hub.docker.com/_/docker/
+* https://github.com/swarmpit/swarmpit
