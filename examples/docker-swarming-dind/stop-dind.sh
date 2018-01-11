@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e -x
-DOCKER_ORCHESTRATOR=swarm
+export DOCKER_ORCHESTRATOR=swarm
 : NUM_WORKERS=${NUM_WORKERS:=3}
 
 if [ ! -z "$1" ] ; then

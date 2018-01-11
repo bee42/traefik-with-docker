@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e -x
-DOCKER_ORCHESTRATOR=swarm
+export DOCKER_ORCHESTRATOR=swarm
 DOCKER_WORKER_VERSION="17.12.0-ce-dind"
 
 if [ "$(docker info --format '{{ json .Swarm }}' |jq '.NodeID')" == "\"\"" ];then
