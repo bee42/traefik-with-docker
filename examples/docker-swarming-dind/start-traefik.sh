@@ -7,9 +7,6 @@ if [ ! "$(docker network ls --filter name=$NETWORK -q)" ];then
 fi
 
 if [ ! "$(docker service ls --filter name=traefik -q)" ];then
-# 1.2 feature
-#    --web.metrics.prometheus \
-#    --web.metrics.prometheus.buckets="100,300"
 
   docker service create \
     --name traefik \
@@ -18,12 +15,12 @@ if [ ! "$(docker service ls --filter name=traefik -q)" ];then
     --publish 8080:8080 \
     --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
     --network ${NETWORK} \
-   traefik:v1.3.1 \
+   traefik:v1.6.6 \
      --accesslogsfile=/access.log \
      --checknewversion=false \
-     --web \
-     --web.metrics.prometheus \
-     --web.metrics.prometheus.buckets="100,300" \
+     --api.dashboard=true \
+     --metrics.prometheus \
+     --metrics.prometheus.buckets= [0.1,0.3,1.2,5.0] \
     --docker \
     --docker.exposedbydefault=false \
     --docker.swarmmode=true \

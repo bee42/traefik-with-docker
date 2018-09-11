@@ -11,7 +11,7 @@ fi
 
 
 # pull image if not available
-whoami=emilevauge/whoami
+whoami=bee42/whoami:2.0.0
 if [ ! "$(docker images -q 127.0.0.1:5000/$whoami)" ];then
   docker pull $whoami
   docker tag $whoami 127.0.0.1:5000/$whoami
