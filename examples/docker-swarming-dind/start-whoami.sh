@@ -12,11 +12,11 @@ fi
 
 # pull image if not available
 whoami=bee42/whoami:2.1.0
-if [ ! "$(docker images -q 127.0.0.1:5000/$whoami)" ];then
-  docker pull $whoami
-  docker tag $whoami 127.0.0.1:5000/$whoami
-  docker push 127.0.0.1:5000/$whoami
-fi
+#if [ ! "$(docker images -q 127.0.0.1:5000/$whoami)" ];then
+#  docker pull $whoami
+#  docker tag $whoami 127.0.0.1:5000/$whoami
+#  docker push 127.0.0.1:5000/$whoami
+#fi
 
 : SERVICES_COUNT=${SERVICES_COUNT:=1}
 
@@ -33,6 +33,6 @@ for i in $(seq $SERVICES_COUNT); do
       --label traefik.enable=true \
       --label traefik.backend.loadbalancer=drr \
       --network $NETWORK \
-     127.0.0.1:5000/$whoami
+     $whoami
   fi
 done
