@@ -3,8 +3,30 @@
 
 ```
 # use this at Docker for Mac
-$ export DOCKER_ORCHESTRATOR=swarm
-$ ./start-dind.sh
+# docker <= 18.09
+# export DOCKER_ORCHESTRATOR=swarm
+$ export DOCKER_STACK_ORCHESTRATOR=swarm
+$ docker network inspect bridge
+[
+    {
+        "Name": "bridge",
+        "Id": "59eb10f40b080bfc9a124092e20be0136d26a8c74bd3eb4be078332a012c1634",
+        "Created": "2019-10-18T07:36:26.009159148Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"
+                }
+            ]
+        },
+...
+$ ./start-dind.sh --advertise-addr <net work Gateway ip addrs bridge network>
 $ ./start-traefik.sh
 $ ./start-whoami.sh
 ```
@@ -18,9 +40,9 @@ $ ./start-dind.sh --advertise-addr 10.14.0.11
 Lookup and scale
 
 ```
-$ docker service update --replicas 2  whoami0
-$ docker service scale whoami0=4 whoami1=3
-$ curl -H Host:whoami0.traefik http://localhost
+$ docker service update --replicas 2  whoami1
+$ docker service scale whoami1=3
+$ curl -H Host:whoami1.traefik http://localhost
 $ curl -H Host:whoami1.traefik http://localhost
 ```
 

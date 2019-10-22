@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e -x
 export DOCKER_ORCHESTRATOR=swarm
-DOCKER_WORKER_VERSION="18.09.1-dind"
+DOCKER_WORKER_VERSION="19.03.4-dind"
 
 if [ "$(docker info --format '{{ json .Swarm }}' |jq '.NodeID')" == "\"\"" ];then
   docker swarm init $@
@@ -32,6 +32,7 @@ for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
     docker run -d --privileged --name worker-${WORKER_NUMBER} \
       --hostname=worker-${WORKER_NUMBER} \
       -p ${WORKER_NUMBER}2375:2375 \
+      -e DOCKER_TLS_CERTDIR= \
       docker:${DOCKER_WORKER_VERSION} \
       --storage-driver=overlay2 \
       --registry-mirror http://127.0.0.1:5001 \

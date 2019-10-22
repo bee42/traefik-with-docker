@@ -15,7 +15,7 @@ if [ ! "$(docker service ls --filter name=traefik -q)" ];then
     --publish 8080:8080 \
     --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
     --network ${NETWORK} \
-   traefik:v1.6.6 \
+   traefik:v1.7.18 \
      --accesslogsfile=/access.log \
      --checknewversion=false \
      --api.dashboard=true \
