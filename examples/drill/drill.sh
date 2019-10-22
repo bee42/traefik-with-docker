@@ -6,7 +6,7 @@ if [ ! "$(docker network ls --filter name=$NETWORK -q)" ];then
 fi
 
 if [ ! $(docker ps -q --filter label=com.docker.swarm.service.name=debug-$NETWORK) ];then
-  docker service create --network $NETWORK --name debug-$NETWORK --mode global \
+  docker service create --network $NETWORK --name debug-$NETWORK --constraint=node.role==manager \
        127.0.0.1:5000/bee42/drill sleep 1000000000
   sleep 2
 fi
