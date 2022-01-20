@@ -26,20 +26,22 @@ $ docker network inspect bridge
             ]
         },
 ...
-$ ./start-dind.sh --advertise-addr <net work Gateway ip addrs bridge network>
+# <net work Gateway ip addrs bridge network>
+$ export GATEWAY_IP=$(docker network inspect bridge |jq -r '.[] | .IPAM.Config|.[0].Gateway')
+$ ./start-dind.sh --advertise-addr $GATEWAY_IP
 $ ./start-traefik.sh
 $ ./start-whoami.sh
 ```
 
 start dind at private network interface
 
-```
+```shell
 $ ./start-dind.sh --advertise-addr 10.14.0.11
 ```
 
 Lookup and scale
 
-```
+```shell
 $ docker service update --replicas 2  whoami1
 $ docker service scale whoami1=3
 $ curl -H Host:whoami1.traefik http://localhost

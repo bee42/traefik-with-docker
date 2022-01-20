@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e -x
-export DOCKER_ORCHESTRATOR=swarm
-DOCKER_WORKER_VERSION="19.03.4-dind"
+export DOCKER_STACK_ORCHESTRATOR=swarm
+DOCKER_WORKER_VERSION="20.10.12-dind"
 
 if [ "$(docker info --format '{{ json .Swarm }}' |jq '.NodeID')" == "\"\"" ];then
   docker swarm init $@
@@ -35,10 +35,10 @@ for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
       -e DOCKER_TLS_CERTDIR= \
       docker:${DOCKER_WORKER_VERSION} \
       --storage-driver=overlay2 \
-      --registry-mirror http://127.0.0.1:5001 \
+      --registry-mirror http://${GATEWAY_IP}:5001 \
       --metrics-addr 0.0.0.0:4999 \
       --experimental
-    sleep 2
+    sleep 30
     docker --host=127.0.0.1:${WORKER_NUMBER}2375 swarm join \
       --token ${SWARM_TOKEN} \
       ${SWARM_MASTER}:2377

@@ -1,6 +1,9 @@
 #!/bin/bash
 
 set -e -x
+export DOCKER_STACK_ORCHESTRATOR=swarm
+DOCKER_WORKER_VERSION="20.10.12-dind"
+export GATEWAY_IP=$(docker network inspect bridge |jq -r '.[] | .IPAM.Config|.[0].Gateway')
 
 if [ ! -z "$1" ] ; then
   WORKER_NUMBER=$1
@@ -16,12 +19,13 @@ if [ ! "$(docker service ls --filter name=worker-${WORKER_NUMBER} -q)" ];then
   docker run -d --privileged --name worker-${WORKER_NUMBER} \
     --hostname=worker-${WORKER_NUMBER} \
     -p ${WORKER_NUMBER}2375:2375 \
-    docker:18.06.1-ce-dind \
-    --registry-mirror http://127.0.0.1:5001 \
+    -e DOCKER_TLS_CERTDIR= \
+    docker:${DOCKER_WORKER_VERSION} \
+    --storage-driver=overlay2 \
+    --registry-mirror http://${GATEWAY_IP}:5001 \
     --metrics-addr 0.0.0.0:4999 \
     --experimental
-
-  sleep 2
+  sleep 30
 
   docker --host=localhost:${WORKER_NUMBER}2375 swarm join \
     --token ${SWARM_TOKEN} \
