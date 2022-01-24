@@ -2,6 +2,7 @@
 set -e -x
 export DOCKER_STACK_ORCHESTRATOR=swarm
 DOCKER_WORKER_VERSION="20.10.12-dind"
+export GATEWAY_IP=$(docker network inspect bridge |jq -r '.[] | .IPAM.Config|.[0].Gateway')
 
 if [ "$(docker info --format '{{ json .Swarm }}' |jq '.NodeID')" == "\"\"" ];then
   docker swarm init $@
@@ -36,6 +37,7 @@ for WORKER_NUMBER in $(seq ${NUM_WORKERS}); do
       docker:${DOCKER_WORKER_VERSION} \
       --storage-driver=overlay2 \
       --registry-mirror http://${GATEWAY_IP}:5001 \
+      --insecure-registry http://${GATEWAY_IP}:5004 \
       --metrics-addr 0.0.0.0:4999 \
       --experimental
     sleep 30
@@ -58,5 +60,5 @@ if [ ! "$(docker service ls --filter name=registry -q)" ];then
   docker service create --name registry \
     --detach=true \
     --constraint 'node.role == manager' \
-    --publish 5000:5000 registry:2
+    --publish 5004:5000 registry:2
 fi

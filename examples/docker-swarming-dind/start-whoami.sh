@@ -31,7 +31,7 @@ for i in $(seq $SERVICES_COUNT); do
       --label orbiter=true \
       --label traefik.port=80 \
       --label traefik.enable=true \
-      --label traefik.backend.loadbalancer=drr \
+      --label traefik.backend.loadbalancer.method=drr \
       --network $NETWORK \
      $whoami
   fi

@@ -1,7 +1,7 @@
 # start a local docker swarming DinD
 
 
-```
+```shell
 # use this at Docker for Mac
 # docker <= 18.09
 # export DOCKER_ORCHESTRATOR=swarm
@@ -29,6 +29,7 @@ $ docker network inspect bridge
 # <net work Gateway ip addrs bridge network>
 $ export GATEWAY_IP=$(docker network inspect bridge |jq -r '.[] | .IPAM.Config|.[0].Gateway')
 $ ./start-dind.sh --advertise-addr $GATEWAY_IP
+# https://doc.traefik.io/traefik/v1.7/configuration/backends/docker/#on-containers
 $ ./start-traefik.sh
 $ ./start-whoami.sh
 ```
@@ -54,7 +55,25 @@ stop the swarming DinD cluster
 $ ./stop-dind.sh
 ```
 
+## Push your own image to insecure registry
+
+```yaml
+docker tag nginx:1.19.3 127.0.0.1:5004/bee42/nginx:1.19.3
+docker push 127.0.0.1:5004/bee42/nginx:1.19.3
+# create a service
+docker service create \
+      --name web1 \
+      --label orbiter=true \
+      --label traefik.port=80 \
+      --label traefik.enable=true \
+      --label traefik.backend.loadbalancer.method=drr \
+      --network traefik-net \
+     172.17.0.1:5004/bee42/nginx:1.19.3
+
+```
+
 ## Links
 
 * https://hub.docker.com/_/docker/
 * https://github.com/swarmpit/swarmpit
+* https://doc.traefik.io/traefik/v1.7/configuration/backends/docker/#on-containers

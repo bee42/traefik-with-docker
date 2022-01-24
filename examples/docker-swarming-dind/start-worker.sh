@@ -23,6 +23,7 @@ if [ ! "$(docker service ls --filter name=worker-${WORKER_NUMBER} -q)" ];then
     docker:${DOCKER_WORKER_VERSION} \
     --storage-driver=overlay2 \
     --registry-mirror http://${GATEWAY_IP}:5001 \
+    --insecure-registry http://${GATEWAY_IP}:5000 \
     --metrics-addr 0.0.0.0:4999 \
     --experimental
   sleep 30
